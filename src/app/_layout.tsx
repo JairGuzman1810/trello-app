@@ -1,10 +1,9 @@
+import { StatusBar, StyleSheet, View } from "react-native";
+import React, { useCallback } from "react";
+import { Slot, SplashScreen } from "expo-router";
 import { useFonts } from "expo-font";
-import { useCallback } from "react";
-import { StyleSheet, StatusBar, View, Platform } from "react-native";
-import * as SplashScreen from "expo-splash-screen";
-import TaskBoard from "@/components/TaskBoard";
 
-export default function App() {
+export default function RootLayout() {
   const [fontsLoaded, fontError] = useFonts({
     "Montserrat-Regular": require("@/assets/fonts/Montserrat-Regular.ttf"),
     "Montserrat-Bold": require("@/assets/fonts/Montserrat-Bold.ttf"),
@@ -23,14 +22,12 @@ export default function App() {
 
   return (
     <View style={styles.container} onLayout={onLayoutRootView}>
-      <TaskBoard />
-      {Platform.OS === "android" && (
-        <StatusBar
-          animated={true}
-          backgroundColor="#8711c1"
-          barStyle="light-content"
-        />
-      )}
+      <StatusBar
+        animated={true}
+        backgroundColor="#8711c1"
+        barStyle="light-content"
+      />
+      <Slot />
     </View>
   );
 }
@@ -38,6 +35,6 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
+    paddingTop: 30,
   },
 });

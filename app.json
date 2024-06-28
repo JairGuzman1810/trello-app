@@ -3,6 +3,7 @@
     "name": "trello-app",
     "slug": "trello-app",
     "version": "1.0.0",
+    "scheme": "trello-app",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -23,6 +24,6 @@
     "web": {
       "favicon": "./assets/favicon.png"
     },
-    "plugins": ["expo-font"]
+    "plugins": ["expo-font", "expo-router"]
   }
 }
