@@ -1,8 +1,8 @@
 import { useFonts } from "expo-font";
 import { useCallback } from "react";
-import { StyleSheet, SafeAreaView, StatusBar, View } from "react-native";
+import { StyleSheet, StatusBar, View, Platform } from "react-native";
 import * as SplashScreen from "expo-splash-screen";
-import TaskList from "@/components/TaskList";
+import TaskBoard from "@/components/TaskBoard";
 
 export default function App() {
   const [fontsLoaded, fontError] = useFonts({
@@ -22,12 +22,16 @@ export default function App() {
   }
 
   return (
-    <SafeAreaView style={styles.container} onLayout={onLayoutRootView}>
-      <View style={{ padding: 10 }}>
-        <TaskList />
-      </View>
-      <StatusBar />
-    </SafeAreaView>
+    <View style={styles.container} onLayout={onLayoutRootView}>
+      <TaskBoard />
+      {Platform.OS === "android" && (
+        <StatusBar
+          animated={true}
+          backgroundColor="#8711c1"
+          barStyle="light-content"
+        />
+      )}
+    </View>
   );
 }
 

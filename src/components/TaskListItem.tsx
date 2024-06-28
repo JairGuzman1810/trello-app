@@ -22,7 +22,7 @@ export default function TaskListItem({ task }: TaskListItemProps) {
 const styles = StyleSheet.create({
   container: {
     backgroundColor: "#1D2125",
-    padding: 10,
+    padding: 15,
     borderRadius: 5,
     flexDirection: "row",
     alignItems: "center",
