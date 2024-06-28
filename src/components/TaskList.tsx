@@ -13,8 +13,13 @@ type Task = {
   description: string;
 };
 
+const dummyTasks: Task[] = [
+  { description: "First Task" },
+  { description: "Second Task" },
+];
+
 export default function TaskList() {
-  const [tasks, setTasks] = useState<Task[]>([]);
+  const [tasks, setTasks] = useState<Task[]>(dummyTasks);
   const [newTask, setNewTask] = useState("");
 
   const createTask = () => {
@@ -62,7 +67,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 18,
-    fontFamily: "Montserrat-Bold",
+    fontFamily: "Montserrat-Medium",
     color: "#fff",
   },
   input: {

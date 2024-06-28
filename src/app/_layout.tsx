@@ -1,7 +1,8 @@
-import { StatusBar, StyleSheet, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import React, { useCallback } from "react";
-import { Slot, SplashScreen } from "expo-router";
+import { SplashScreen, Stack } from "expo-router";
 import { useFonts } from "expo-font";
+import { StatusBar } from "expo-status-bar";
 
 export default function RootLayout() {
   const [fontsLoaded, fontError] = useFonts({
@@ -22,12 +23,22 @@ export default function RootLayout() {
 
   return (
     <View style={styles.container} onLayout={onLayoutRootView}>
-      <StatusBar
-        animated={true}
-        backgroundColor="#8711c1"
-        barStyle="light-content"
-      />
-      <Slot />
+      <StatusBar style="auto" />
+      <Stack
+        screenOptions={{
+          headerTitleAlign: "center",
+          headerTitleStyle: { fontFamily: "Montserrat-Bold" },
+        }}
+      >
+        <Stack.Screen
+          name="index"
+          options={{ title: "Project Board" }}
+        ></Stack.Screen>
+        <Stack.Screen
+          name="details"
+          options={{ title: "Task Details" }}
+        ></Stack.Screen>
+      </Stack>
     </View>
   );
 }
@@ -35,6 +46,5 @@ export default function RootLayout() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: 30,
   },
 });

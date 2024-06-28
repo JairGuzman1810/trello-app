@@ -1,6 +1,7 @@
-import { StyleSheet, Text, View } from "react-native";
+import { Pressable, StyleSheet, Text, TouchableOpacity } from "react-native";
 import React from "react";
 import { FontAwesome } from "@expo/vector-icons";
+import { Link } from "expo-router";
 
 type Task = {
   description: string;
@@ -12,10 +13,14 @@ type TaskListItemProps = {
 
 export default function TaskListItem({ task }: TaskListItemProps) {
   return (
-    <View style={styles.container}>
-      <Text style={styles.text}>{task.description}</Text>
-      <FontAwesome name="close" size={24} color="gray" />
-    </View>
+    <Link href={"/details"} asChild>
+      <Pressable style={styles.container}>
+        <Text style={styles.text}>{task.description}</Text>
+        <TouchableOpacity>
+          <FontAwesome name="close" size={24} color="gray" />
+        </TouchableOpacity>
+      </Pressable>
+    </Link>
   );
 }
 
