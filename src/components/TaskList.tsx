@@ -10,12 +10,13 @@ import TaskListItem from "./TaskListItem";
 import { useState } from "react";
 
 type Task = {
+  id: number;
   description: string;
 };
 
 const dummyTasks: Task[] = [
-  { description: "First Task" },
-  { description: "Second Task" },
+  { id: 1, description: "First Task" },
+  { id: 2, description: "Second Task" },
 ];
 
 export default function TaskList() {
@@ -23,7 +24,7 @@ export default function TaskList() {
   const [newTask, setNewTask] = useState("");
 
   const createTask = () => {
-    setTasks([...tasks, { description: newTask }]);
+    setTasks([...tasks, { id: tasks.length + 1, description: newTask }]);
     setNewTask("");
   };
   return (
@@ -35,6 +36,7 @@ export default function TaskList() {
       {/* List of tasks */}
       <FlatList
         data={tasks}
+        keyExtractor={(item) => `${item.id}`}
         contentContainerStyle={{ gap: 5 }}
         renderItem={({ item }) => <TaskListItem task={item} />}
       />

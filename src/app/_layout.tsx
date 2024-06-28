@@ -3,6 +3,7 @@ import React, { useCallback } from "react";
 import { SplashScreen, Stack } from "expo-router";
 import { useFonts } from "expo-font";
 import { StatusBar } from "expo-status-bar";
+import { ThemeProvider, DarkTheme } from "@react-navigation/native";
 
 export default function RootLayout() {
   const [fontsLoaded, fontError] = useFonts({
@@ -23,22 +24,20 @@ export default function RootLayout() {
 
   return (
     <View style={styles.container} onLayout={onLayoutRootView}>
-      <StatusBar style="auto" />
-      <Stack
-        screenOptions={{
-          headerTitleAlign: "center",
-          headerTitleStyle: { fontFamily: "Montserrat-Bold" },
-        }}
-      >
-        <Stack.Screen
-          name="index"
-          options={{ title: "Project Board" }}
-        ></Stack.Screen>
-        <Stack.Screen
-          name="details"
-          options={{ title: "Task Details" }}
-        ></Stack.Screen>
-      </Stack>
+      <ThemeProvider value={DarkTheme}>
+        <StatusBar style="light" />
+        <Stack
+          screenOptions={{
+            headerTitleAlign: "center",
+            headerTitleStyle: { fontFamily: "Montserrat-Bold" },
+          }}
+        >
+          <Stack.Screen
+            name="index"
+            options={{ title: "Project Board" }}
+          ></Stack.Screen>
+        </Stack>
+      </ThemeProvider>
     </View>
   );
 }

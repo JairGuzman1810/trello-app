@@ -4,6 +4,7 @@ import { FontAwesome } from "@expo/vector-icons";
 import { Link } from "expo-router";
 
 type Task = {
+  id: number;
   description: string;
 };
 
@@ -13,7 +14,7 @@ type TaskListItemProps = {
 
 export default function TaskListItem({ task }: TaskListItemProps) {
   return (
-    <Link href={"/details"} asChild>
+    <Link href={`/${task.id}`} asChild>
       <Pressable style={styles.container}>
         <Text style={styles.text}>{task.description}</Text>
         <TouchableOpacity>
