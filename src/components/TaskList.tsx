@@ -8,23 +8,20 @@ import {
 } from "react-native";
 import TaskListItem from "./TaskListItem";
 import { useState } from "react";
-
-type Task = {
-  id: number;
-  description: string;
-};
-
-const dummyTasks: Task[] = [
-  { id: 1, description: "First Task" },
-  { id: 2, description: "Second Task" },
-];
+import { useQuery, useRealm } from "@realm/react";
+import { Task } from "@/models/Task";
 
 export default function TaskList() {
-  const [tasks, setTasks] = useState<Task[]>(dummyTasks);
+  const realm = useRealm();
+
+  const tasks = useQuery(Task);
+
   const [newTask, setNewTask] = useState("");
 
   const createTask = () => {
-    setTasks([...tasks, { id: tasks.length + 1, description: newTask }]);
+    realm.write(() => {
+      realm.create(Task, { description: newTask, user_id: "1" });
+    });
     setNewTask("");
   };
   return (
@@ -36,7 +33,7 @@ export default function TaskList() {
       {/* List of tasks */}
       <FlatList
         data={tasks}
-        keyExtractor={(item) => `${item.id}`}
+        keyExtractor={(item) => `${item._id}`}
         contentContainerStyle={{ gap: 5 }}
         renderItem={({ item }) => <TaskListItem task={item} />}
       />

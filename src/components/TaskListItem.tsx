@@ -2,22 +2,26 @@ import { Pressable, StyleSheet, Text, TouchableOpacity } from "react-native";
 import React from "react";
 import { FontAwesome } from "@expo/vector-icons";
 import { Link } from "expo-router";
-
-type Task = {
-  id: number;
-  description: string;
-};
+import { Task } from "@/models/Task";
+import { useRealm } from "@realm/react";
 
 type TaskListItemProps = {
   task: Task;
 };
 
 export default function TaskListItem({ task }: TaskListItemProps) {
+  const realm = useRealm();
+  const deleteTask = () => {
+    realm.write(() => {
+      realm.delete(task);
+    });
+  };
+
   return (
-    <Link href={`/${task.id}`} asChild>
+    <Link href={`/${task._id}`} asChild>
       <Pressable style={styles.container}>
         <Text style={styles.text}>{task.description}</Text>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={deleteTask}>
           <FontAwesome name="close" size={24} color="gray" />
         </TouchableOpacity>
       </Pressable>
