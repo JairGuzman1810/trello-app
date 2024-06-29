@@ -1,7 +1,7 @@
-import { StyleSheet, Text, View } from "react-native";
-import React from "react";
+import { StyleSheet, Text, TextInput, View } from "react-native";
+import React, { useState } from "react";
 import { Stack, useLocalSearchParams } from "expo-router";
-import { useObject } from "@realm/react";
+import { useObject, useRealm } from "@realm/react";
 import { Task } from "@/models/Task";
 import { BSON } from "realm";
 
@@ -9,6 +9,21 @@ const TaskDetails = () => {
   const { id } = useLocalSearchParams();
 
   const task = useObject<Task>(Task, new BSON.ObjectID(id as string));
+
+  const [updatedDescription, setUpdatedDescription] = useState(
+    task?.description || "",
+  );
+
+  const realm = useRealm();
+
+  const updateDescription = () => {
+    if (!task) {
+      return;
+    }
+    realm.write(() => {
+      task.description = updatedDescription;
+    });
+  };
 
   if (!task) {
     return (
@@ -22,21 +37,37 @@ const TaskDetails = () => {
   return (
     <View style={styles.container}>
       <Stack.Screen options={{ title: "Task Details" }}></Stack.Screen>
-      <Text style={styles.text}>{task.description}</Text>
+      <TextInput
+        value={updatedDescription}
+        onChangeText={setUpdatedDescription}
+        onEndEditing={updateDescription}
+        style={styles.input}
+      />
     </View>
   );
 };
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    padding: 16,
+  },
   notfoundcontainer: {
     flex: 1,
-    alignItems: "center",
     justifyContent: "center",
+    alignItems: "center",
   },
-  container: { padding: 10 },
   text: {
+    color: "white",
+    fontSize: 18,
+    fontFamily: "Montserrat-Regular",
+  },
+  input: {
     color: "#fff",
-    fontSize: 20,
+    padding: 13.5,
+    backgroundColor: "#1D2125",
+    borderRadius: 5,
+    fontSize: 14,
     fontFamily: "Montserrat-Regular",
   },
 });
