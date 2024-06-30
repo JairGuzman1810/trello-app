@@ -25,23 +25,24 @@ export default function RootLayout() {
 
   return (
     <View style={styles.container} onLayout={onLayoutRootView}>
-      <ThemeProvider value={DarkTheme}>
-        <RealmCustomProvider>
-          <Stack
-            screenOptions={{
-              headerTitleAlign: "center",
-              headerTitleStyle: { fontFamily: "Montserrat-Bold" },
-            }}
-          >
-            <Stack.Screen
-              name="index"
-              options={{ title: "Project Board" }}
-            ></Stack.Screen>
-          </Stack>
-        </RealmCustomProvider>
-
+      <>
+        <ThemeProvider value={DarkTheme}>
+          <RealmCustomProvider>
+            <Stack
+              screenOptions={{
+                headerTitleAlign: "center",
+                headerTitleStyle: { fontFamily: "Montserrat-Bold" },
+              }}
+            >
+              <Stack.Screen
+                name="index"
+                options={{ title: "Project Board" }}
+              ></Stack.Screen>
+            </Stack>
+          </RealmCustomProvider>
+        </ThemeProvider>
         <StatusBar style="light" />
-      </ThemeProvider>
+      </>
     </View>
   );
 }
