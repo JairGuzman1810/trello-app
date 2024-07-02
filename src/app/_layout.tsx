@@ -4,6 +4,7 @@ import { SplashScreen, Stack } from "expo-router";
 import { useFonts } from "expo-font";
 import { StatusBar } from "expo-status-bar";
 import { ThemeProvider, DarkTheme } from "@react-navigation/native";
+import "react-native-get-random-values";
 import RealmCustomProvider from "@/providers/Realm";
 
 export default function RootLayout() {

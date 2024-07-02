@@ -1,8 +1,23 @@
 import { PropsWithChildren } from "react";
 import Realm from "realm";
-import { RealmProvider } from "@realm/react";
+import { AppProvider, RealmProvider, UserProvider } from "@realm/react";
 import { Task } from "@/models/Task";
+import Login from "@/components/Login";
 
 export default function RealmCustomProvider({ children }: PropsWithChildren) {
-  return <RealmProvider schema={[Task]}>{children}</RealmProvider>;
+  // Get the app ID from environment variables
+  const realmAppId = process.env.EXPO_PUBLIC_TRELLO_APP_ID;
+
+  // Check if the app ID is defined
+  if (!realmAppId) {
+    throw new Error("Realm App ID must be defined in environment variables");
+  }
+
+  return (
+    <AppProvider id={realmAppId}>
+      <UserProvider fallback={Login}>
+        <RealmProvider schema={[Task]}>{children}</RealmProvider>
+      </UserProvider>
+    </AppProvider>
+  );
 }
