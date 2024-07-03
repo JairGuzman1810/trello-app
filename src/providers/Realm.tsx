@@ -16,7 +16,23 @@ export default function RealmCustomProvider({ children }: PropsWithChildren) {
   return (
     <AppProvider id={realmAppId}>
       <UserProvider fallback={Login}>
-        <RealmProvider schema={[Task]}>{children}</RealmProvider>
+        <RealmProvider
+          schema={[Task]}
+          sync={{
+            onError: (_session, error) => {
+              console.log(error);
+            },
+            flexible: true,
+            initialSubscriptions: {
+              update(subs, realm) {
+                subs.add(realm.objects(Task));
+              },
+              rerunOnOpen: true,
+            },
+          }}
+        >
+          {children}
+        </RealmProvider>
       </UserProvider>
     </AppProvider>
   );
