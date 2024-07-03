@@ -2,7 +2,7 @@ import { PropsWithChildren } from "react";
 import Realm from "realm";
 import { AppProvider, RealmProvider, UserProvider } from "@realm/react";
 import { Task } from "@/models/Task";
-import Login from "@/components/Login";
+import AnonymousLogin from "@/components/AnonymousLogin";
 
 export default function RealmCustomProvider({ children }: PropsWithChildren) {
   // Get the app ID from environment variables
@@ -15,7 +15,7 @@ export default function RealmCustomProvider({ children }: PropsWithChildren) {
 
   return (
     <AppProvider id={realmAppId}>
-      <UserProvider fallback={Login}>
+      <UserProvider fallback={AnonymousLogin}>
         <RealmProvider
           schema={[Task]}
           sync={{

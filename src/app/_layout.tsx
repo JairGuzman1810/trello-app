@@ -6,6 +6,7 @@ import { StatusBar } from "expo-status-bar";
 import { ThemeProvider, DarkTheme } from "@react-navigation/native";
 import "react-native-get-random-values";
 import RealmCustomProvider from "@/providers/Realm";
+import { FontAwesome } from "@expo/vector-icons";
 
 export default function RootLayout() {
   const [fontsLoaded, fontError] = useFonts({
@@ -33,6 +34,13 @@ export default function RootLayout() {
               screenOptions={{
                 headerTitleAlign: "center",
                 headerTitleStyle: { fontFamily: "Montserrat-Bold" },
+                headerRight: () => (
+                  <FontAwesome
+                    name="user-circle-o"
+                    size={22}
+                    color="lightgray"
+                  />
+                ),
               }}
             >
               <Stack.Screen
