@@ -33,13 +33,12 @@ export default function LoginScreen() {
   const linkCredentials = useCallback(async () => {
     const credentials = Credentials.emailPassword({ email, password });
     await user.linkCredentials(credentials);
-    logInWithEmailPassword({ email, password });
-  }, [email, logInWithEmailPassword, password, user]);
+    await Updates.reloadAsync();
+  }, [email, password, user]);
 
   useEffect(() => {
     if (result.success && result.operation === AuthOperationName.Register) {
       linkCredentials();
-      Updates.reloadAsync();
     } else if (
       result.success &&
       result.operation === AuthOperationName.LogInWithEmailPassword
