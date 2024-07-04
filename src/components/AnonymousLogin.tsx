@@ -1,9 +1,12 @@
+import { useEffect } from "react";
 import { useAuth } from "@realm/react";
 
 const AnonymousLogin = () => {
   const { logInWithAnonymous } = useAuth();
 
-  logInWithAnonymous();
+  useEffect(() => {
+    logInWithAnonymous();
+  }, [logInWithAnonymous]);
 
   return null;
 };

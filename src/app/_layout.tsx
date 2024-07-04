@@ -6,7 +6,8 @@ import { StatusBar } from "expo-status-bar";
 import { ThemeProvider, DarkTheme } from "@react-navigation/native";
 import "react-native-get-random-values";
 import RealmCustomProvider from "@/providers/Realm";
-import { FontAwesome } from "@expo/vector-icons";
+
+SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
   const [fontsLoaded, fontError] = useFonts({
@@ -31,22 +32,24 @@ export default function RootLayout() {
         <ThemeProvider value={DarkTheme}>
           <RealmCustomProvider>
             <Stack
+              initialRouteName="index"
               screenOptions={{
                 headerTitleAlign: "center",
                 headerTitleStyle: { fontFamily: "Montserrat-Bold" },
-                headerRight: () => (
-                  <FontAwesome
-                    name="user-circle-o"
-                    size={22}
-                    color="lightgray"
-                  />
-                ),
               }}
             >
               <Stack.Screen
-                name="index"
-                options={{ title: "Project Board" }}
-              ></Stack.Screen>
+                name="login"
+                options={{
+                  title: "Login",
+                }}
+              />
+              <Stack.Screen
+                name="profile"
+                options={{
+                  title: "Profile",
+                }}
+              />
             </Stack>
           </RealmCustomProvider>
         </ThemeProvider>
