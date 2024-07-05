@@ -1,24 +1,10 @@
 import { StyleSheet, Text, View, Pressable } from "react-native";
-import React, { useEffect } from "react";
 import { FontAwesome } from "@expo/vector-icons";
-import { AuthOperationName, useAuth, useUser } from "@realm/react";
-import { useRouter } from "expo-router";
-import * as Updates from "expo-updates";
+import { useAuth, useUser } from "@realm/react";
 
 export default function Profile() {
   const user = useUser();
-  const { logOut, result } = useAuth();
-  const router = useRouter();
-
-  const handleLogout = () => {
-    logOut();
-  };
-
-  useEffect(() => {
-    if (result.success && result.operation === AuthOperationName.LogOut) {
-      Updates.reloadAsync();
-    }
-  }, [result, router]);
+  const { logOut } = useAuth();
 
   return (
     <View style={styles.container}>
@@ -28,7 +14,7 @@ export default function Profile() {
       <Text style={styles.emailText}>
         {user?.profile?.email || "User Email"}
       </Text>
-      <Pressable style={styles.button} onPress={handleLogout}>
+      <Pressable style={styles.button} onPress={() => logOut()}>
         <Text style={styles.buttonText}>Log Out</Text>
       </Pressable>
     </View>

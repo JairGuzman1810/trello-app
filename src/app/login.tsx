@@ -17,14 +17,11 @@ import {
 } from "@realm/react";
 import { Ionicons } from "@expo/vector-icons";
 import { Credentials } from "realm";
-import { useRouter } from "expo-router";
-import * as Updates from "expo-updates";
 
 export default function LoginScreen() {
   const { result, logInWithEmailPassword } = useAuth();
   const { register } = useEmailPasswordAuth();
   const user = useUser();
-  const router = useRouter();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -33,19 +30,13 @@ export default function LoginScreen() {
   const linkCredentials = useCallback(async () => {
     const credentials = Credentials.emailPassword({ email, password });
     await user.linkCredentials(credentials);
-    await Updates.reloadAsync();
   }, [email, password, user]);
 
   useEffect(() => {
     if (result.success && result.operation === AuthOperationName.Register) {
       linkCredentials();
-    } else if (
-      result.success &&
-      result.operation === AuthOperationName.LogInWithEmailPassword
-    ) {
-      Updates.reloadAsync();
     }
-  }, [linkCredentials, result, router, user]);
+  }, [linkCredentials, result, user]);
 
   // Check if the user is authenticated and redirect to Profile screen
   console.log(result);
