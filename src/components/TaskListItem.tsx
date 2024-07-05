@@ -20,7 +20,9 @@ export default function TaskListItem({ task }: TaskListItemProps) {
   return (
     <Link href={`/${task._id}`} asChild>
       <Pressable style={styles.container}>
-        <Text style={styles.text}>{task.description}</Text>
+        <Text style={styles.text}>
+          {task.position}: {task.description}
+        </Text>
         <TouchableOpacity onPress={deleteTask}>
           <FontAwesome name="close" size={24} color="gray" />
         </TouchableOpacity>

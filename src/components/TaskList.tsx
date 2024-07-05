@@ -16,13 +16,18 @@ export default function TaskList() {
 
   const user = useUser();
 
-  const tasks = useQuery(Task);
+  const tasks = useQuery(Task).sorted("position");
+  const maxPosition = (useQuery(Task).max("position") as number) || 0;
 
   const [newTask, setNewTask] = useState("");
 
   const createTask = () => {
     realm.write(() => {
-      realm.create(Task, { description: newTask, user_id: user.id });
+      realm.create(Task, {
+        description: newTask,
+        user_id: user.id,
+        position: maxPosition + 1,
+      });
     });
     setNewTask("");
   };
