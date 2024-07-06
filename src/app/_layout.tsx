@@ -1,4 +1,4 @@
-import { StyleSheet, View } from "react-native";
+import { StyleSheet } from "react-native";
 import React, { useCallback } from "react";
 import { SplashScreen, Stack } from "expo-router";
 import { useFonts } from "expo-font";
@@ -6,6 +6,7 @@ import { StatusBar } from "expo-status-bar";
 import { ThemeProvider, DarkTheme } from "@react-navigation/native";
 import "react-native-get-random-values";
 import RealmCustomProvider from "@/providers/Realm";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -27,35 +28,36 @@ export default function RootLayout() {
   }
 
   return (
-    <View style={styles.container} onLayout={onLayoutRootView}>
-      <>
-        <ThemeProvider value={DarkTheme}>
-          <RealmCustomProvider>
-            <Stack
-              initialRouteName="index"
-              screenOptions={{
-                headerTitleAlign: "center",
-                headerTitleStyle: { fontFamily: "Montserrat-Bold" },
+    <GestureHandlerRootView
+      style={styles.container}
+      onLayout={onLayoutRootView}
+    >
+      <ThemeProvider value={DarkTheme}>
+        <RealmCustomProvider>
+          <Stack
+            initialRouteName="index"
+            screenOptions={{
+              headerTitleAlign: "center",
+              headerTitleStyle: { fontFamily: "Montserrat-Bold" },
+            }}
+          >
+            <Stack.Screen
+              name="login"
+              options={{
+                title: "Login",
               }}
-            >
-              <Stack.Screen
-                name="login"
-                options={{
-                  title: "Login",
-                }}
-              />
-              <Stack.Screen
-                name="profile"
-                options={{
-                  title: "Profile",
-                }}
-              />
-            </Stack>
-          </RealmCustomProvider>
-        </ThemeProvider>
+            />
+            <Stack.Screen
+              name="profile"
+              options={{
+                title: "Profile",
+              }}
+            />
+          </Stack>
+        </RealmCustomProvider>
         <StatusBar style="light" />
-      </>
-    </View>
+      </ThemeProvider>
+    </GestureHandlerRootView>
   );
 }
 
