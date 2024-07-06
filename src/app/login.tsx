@@ -38,9 +38,6 @@ export default function LoginScreen() {
     }
   }, [linkCredentials, result, user]);
 
-  // Check if the user is authenticated and redirect to Profile screen
-  console.log(result);
-
   const isButtonDisabled = email === "" || password === "";
 
   return (

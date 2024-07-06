@@ -32,8 +32,6 @@ export default function TaskDragArea({ children }: PropsWithChildren) {
     });
 
   const setDraggingTask = (id: BSON.ObjectID) => {
-    console.log("Implemented");
-
     setDraggingTaskId(id);
   };
   return (
