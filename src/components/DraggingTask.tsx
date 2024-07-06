@@ -30,11 +30,13 @@ export default function DraggingTask({ id }: DraggingTaskProps) {
 const styles = StyleSheet.create({
   container: {
     backgroundColor: "#1D2125",
-    padding: 17.9,
+    padding: 17.8,
     borderRadius: 5,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
+    borderColor: "#fff",
+    borderWidth: 0.5,
   },
   text: {
     color: "white",

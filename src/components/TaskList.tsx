@@ -41,8 +41,9 @@ export default function TaskList() {
       <FlatList
         data={tasks}
         keyExtractor={(item) => `${item._id}`}
-        contentContainerStyle={{ gap: 5 }}
-        renderItem={({ item }) => <TaskListItem task={item} />}
+        renderItem={({ item, index }) => (
+          <TaskListItem task={item} index={index} />
+        )}
       />
       {/* New Task input */}
       <TextInput

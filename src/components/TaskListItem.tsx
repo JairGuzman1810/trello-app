@@ -1,4 +1,10 @@
-import { Pressable, StyleSheet, Text, TouchableOpacity } from "react-native";
+import {
+  Pressable,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import React from "react";
 import { FontAwesome } from "@expo/vector-icons";
 import { Link } from "expo-router";
@@ -8,9 +14,12 @@ import { useDraggingContext } from "./TaskDragArea";
 
 type TaskListItemProps = {
   task: Task;
+  index: number;
 };
 
-export default function TaskListItem({ task }: TaskListItemProps) {
+export const ItemHeight = 60;
+
+export default function TaskListItem({ task, index }: TaskListItemProps) {
   const realm = useRealm();
   const { setDraggingTask } = useDraggingContext();
   const deleteTask = () => {
@@ -20,23 +29,29 @@ export default function TaskListItem({ task }: TaskListItemProps) {
   };
 
   return (
-    <Link href={`/${task._id}`} asChild>
-      <Pressable
-        style={styles.container}
-        onLongPress={() => setDraggingTask(task._id)}
-      >
-        <Text style={styles.text}>
-          {task.position}: {task.description}
-        </Text>
-        <TouchableOpacity onPress={deleteTask}>
-          <FontAwesome name="close" size={24} color="gray" />
-        </TouchableOpacity>
-      </Pressable>
-    </Link>
+    <View style={styles.root}>
+      <Link href={`/${task._id}`} asChild>
+        <Pressable
+          style={styles.container}
+          onLongPress={() => setDraggingTask(task._id, index * ItemHeight)}
+        >
+          <Text style={styles.text}>
+            {task.position}: {task.description}
+          </Text>
+          <TouchableOpacity onPress={deleteTask}>
+            <FontAwesome name="close" size={24} color="gray" />
+          </TouchableOpacity>
+        </Pressable>
+      </Link>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
+  root: {
+    paddingVertical: 3,
+    height: ItemHeight,
+  },
   container: {
     backgroundColor: "#1D2125",
     padding: 15,
@@ -44,6 +59,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
+    height: "100%",
   },
   text: {
     color: "white",

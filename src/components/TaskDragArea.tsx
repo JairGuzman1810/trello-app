@@ -1,12 +1,12 @@
 import { StyleSheet, View, useWindowDimensions } from "react-native";
-import DraggingTask from "./DragginTask";
+import DraggingTask from "./DraggingTask";
 import { BSON } from "realm";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import Animated, { runOnJS, useSharedValue } from "react-native-reanimated";
 import { PropsWithChildren, createContext, useContext, useState } from "react";
 
 type DraggingContextProps = {
-  setDraggingTask: (id: BSON.ObjectID) => void;
+  setDraggingTask: (id: BSON.ObjectID, y: number) => void;
 };
 
 const DraggingContext = createContext<DraggingContextProps>({
@@ -23,16 +23,18 @@ export default function TaskDragArea({ children }: PropsWithChildren) {
   const dragX = useSharedValue(0);
   const dragY = useSharedValue(0);
   const pan = Gesture.Pan()
-    .onUpdate((event) => {
-      dragX.value = event.absoluteX;
-      dragY.value = event.absoluteY;
+    .onChange((event) => {
+      dragX.value = dragX.value + event.changeX;
+      dragY.value = dragY.value + event.changeY;
     })
     .onFinalize(() => {
       runOnJS(setDraggingTaskId)(undefined);
     });
 
-  const setDraggingTask = (id: BSON.ObjectID) => {
+  const setDraggingTask = (id: BSON.ObjectID, y: number) => {
     setDraggingTaskId(id);
+    dragY.value = y + 72;
+    dragX.value = 0;
   };
   return (
     <DraggingContext.Provider value={{ setDraggingTask }}>
@@ -46,12 +48,10 @@ export default function TaskDragArea({ children }: PropsWithChildren) {
             ]}
           >
             <Animated.View
-              style={{
-                width: width - 40,
-                alignSelf: "center",
-                top: dragY,
-                left: dragX,
-              }}
+              style={[
+                styles.content,
+                { width: width - 40, top: dragY, left: dragX },
+              ]}
             >
               <DraggingTask id={draggingTaskId} />
             </Animated.View>
@@ -67,6 +67,10 @@ export default function TaskDragArea({ children }: PropsWithChildren) {
 const styles = StyleSheet.create({
   container: {
     ...(StyleSheet.absoluteFill as object),
+  },
+  content: {
+    alignSelf: "center",
+    transform: [{ rotateZ: "3deg" }],
   },
 });
 
