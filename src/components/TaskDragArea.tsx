@@ -16,13 +16,19 @@ const DraggingContext = createContext<DraggingContextProps>({
 export default function TaskDragArea({ children }: PropsWithChildren) {
   const [draggingTaskId, setDraggingTaskId] = useState<
     BSON.ObjectID | undefined
-  >();
-  //new BSON.ObjectID("66881132032eee805441d971")
+  >(undefined); // Inicializar correctamente
   const { width } = useWindowDimensions();
 
   const dragX = useSharedValue(0);
   const dragY = useSharedValue(0);
+
   const pan = Gesture.Pan()
+    .manualActivation(true)
+    .onTouchesMove((event, stateManager) => {
+      if (draggingTaskId) {
+        stateManager.activate();
+      }
+    })
     .onChange((event) => {
       dragX.value = dragX.value + event.changeX;
       dragY.value = dragY.value + event.changeY;
@@ -36,29 +42,26 @@ export default function TaskDragArea({ children }: PropsWithChildren) {
     dragY.value = y + 72;
     dragX.value = 0;
   };
+
   return (
     <DraggingContext.Provider value={{ setDraggingTask }}>
-      {children}
       <GestureDetector gesture={pan}>
-        {draggingTaskId ? (
-          <View
+        <View style={styles.container}>
+          {children}
+          <Animated.View
             style={[
-              styles.container,
-              draggingTaskId && { backgroundColor: "rgba(100,100,100, 0.1)" },
+              styles.content,
+              {
+                width: width - 40,
+                position: "absolute",
+                top: dragY,
+                left: dragX,
+              },
             ]}
           >
-            <Animated.View
-              style={[
-                styles.content,
-                { width: width - 40, top: dragY, left: dragX },
-              ]}
-            >
-              <DraggingTask id={draggingTaskId} />
-            </Animated.View>
-          </View>
-        ) : (
-          <View />
-        )}
+            {draggingTaskId && <DraggingTask id={draggingTaskId} />}
+          </Animated.View>
+        </View>
       </GestureDetector>
     </DraggingContext.Provider>
   );

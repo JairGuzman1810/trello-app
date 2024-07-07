@@ -6,15 +6,15 @@ import TaskDragArea from "./TaskDragArea";
 
 export default function TaskBoard() {
   return (
-    <View style={styles.container}>
-      <LinearGradient
-        colors={["#8711c1", "#2472fc"]}
-        style={StyleSheet.absoluteFill}
-      />
-      <TaskDragArea>
+    <TaskDragArea>
+      <View style={styles.container}>
+        <LinearGradient
+          colors={["#8711c1", "#2472fc"]}
+          style={StyleSheet.absoluteFill}
+        />
         <TaskList />
-      </TaskDragArea>
-    </View>
+      </View>
+    </TaskDragArea>
   );
 }
 
