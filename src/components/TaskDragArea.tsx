@@ -2,15 +2,22 @@ import { StyleSheet, View, useWindowDimensions } from "react-native";
 import DraggingTask from "./DraggingTask";
 import { BSON } from "realm";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
-import Animated, { runOnJS, useSharedValue } from "react-native-reanimated";
+import Animated, {
+  SharedValue,
+  runOnJS,
+  useSharedValue,
+} from "react-native-reanimated";
 import { PropsWithChildren, createContext, useContext, useState } from "react";
 
 type DraggingContextProps = {
   setDraggingTask: (id: BSON.ObjectID, y: number) => void;
+  dragY?: SharedValue<number>;
+  draggingTaskId: BSON.ObjectID | undefined;
 };
 
 const DraggingContext = createContext<DraggingContextProps>({
   setDraggingTask: () => {},
+  draggingTaskId: undefined,
 });
 
 export default function TaskDragArea({ children }: PropsWithChildren) {
@@ -39,12 +46,18 @@ export default function TaskDragArea({ children }: PropsWithChildren) {
 
   const setDraggingTask = (id: BSON.ObjectID, y: number) => {
     setDraggingTaskId(id);
-    dragY.value = y + 72;
+    dragY.value = y;
     dragX.value = 0;
   };
 
   return (
-    <DraggingContext.Provider value={{ setDraggingTask }}>
+    <DraggingContext.Provider
+      value={{
+        setDraggingTask,
+        dragY: draggingTaskId ? dragY : undefined,
+        draggingTaskId: draggingTaskId,
+      }}
+    >
       <GestureDetector gesture={pan}>
         <View style={styles.container}>
           {children}
