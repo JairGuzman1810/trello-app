@@ -17,6 +17,7 @@ import {
 } from "@realm/react";
 import { Ionicons } from "@expo/vector-icons";
 import { Credentials } from "realm";
+import * as Updates from "expo-updates";
 
 export default function LoginScreen() {
   const { result, logInWithEmailPassword } = useAuth();
@@ -30,11 +31,17 @@ export default function LoginScreen() {
   const linkCredentials = useCallback(async () => {
     const credentials = Credentials.emailPassword({ email, password });
     await user.linkCredentials(credentials);
+    Updates.reloadAsync();
   }, [email, password, user]);
 
   useEffect(() => {
     if (result.success && result.operation === AuthOperationName.Register) {
       linkCredentials();
+    } else if (
+      result.success &&
+      result.operation === AuthOperationName.LogInWithEmailPassword
+    ) {
+      Updates.reloadAsync();
     }
   }, [linkCredentials, result, user]);
 

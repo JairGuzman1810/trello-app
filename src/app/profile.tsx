@@ -1,10 +1,18 @@
 import { StyleSheet, Text, View, Pressable } from "react-native";
 import { FontAwesome } from "@expo/vector-icons";
-import { useAuth, useUser } from "@realm/react";
+import { AuthOperationName, useAuth, useUser } from "@realm/react";
+import * as Updates from "expo-updates";
+import { useEffect } from "react";
 
 export default function Profile() {
   const user = useUser();
-  const { logOut } = useAuth();
+  const { logOut, result } = useAuth();
+
+  useEffect(() => {
+    if (result.success && result.operation === AuthOperationName.LogOut) {
+      Updates.reloadAsync();
+    }
+  }, [result]);
 
   return (
     <View style={styles.container}>
