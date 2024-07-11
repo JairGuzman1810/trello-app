@@ -1,6 +1,5 @@
 import { StyleSheet, View, useWindowDimensions } from "react-native";
 import DraggingTask from "./DraggingTask";
-import { BSON } from "realm";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import Animated, {
   SharedValue,
@@ -8,6 +7,7 @@ import Animated, {
   useSharedValue,
 } from "react-native-reanimated";
 import { PropsWithChildren, createContext, useContext, useState } from "react";
+import { BSON } from "realm";
 
 type DraggingContextProps = {
   setDraggingTask: (id: BSON.ObjectID, y: number) => void;
@@ -20,14 +20,28 @@ const DraggingContext = createContext<DraggingContextProps>({
   draggingTaskId: undefined,
 });
 
-export default function TaskDragArea({ children }: PropsWithChildren) {
+type TaskDragAreaProps = PropsWithChildren<{
+  updateItemPosition: (ItemID: BSON.ObjectID, y: number) => void;
+}>;
+
+export default function TaskDragArea({
+  children,
+  updateItemPosition,
+}: TaskDragAreaProps) {
   const [draggingTaskId, setDraggingTaskId] = useState<
     BSON.ObjectID | undefined
-  >(undefined); // Inicializar correctamente
+  >(undefined);
   const { width } = useWindowDimensions();
 
   const dragX = useSharedValue(0);
   const dragY = useSharedValue(0);
+
+  const drop = () => {
+    if (draggingTaskId) {
+      updateItemPosition(draggingTaskId, dragY.value);
+      setDraggingTaskId(undefined);
+    }
+  };
 
   const pan = Gesture.Pan()
     .manualActivation(true)
@@ -39,6 +53,9 @@ export default function TaskDragArea({ children }: PropsWithChildren) {
     .onChange((event) => {
       dragX.value = dragX.value + event.changeX;
       dragY.value = dragY.value + event.changeY;
+    })
+    .onEnd(() => {
+      runOnJS(drop)();
     })
     .onFinalize(() => {
       runOnJS(setDraggingTaskId)(undefined);

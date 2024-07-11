@@ -18,6 +18,7 @@ export default function RealmCustomProvider({ children }: PropsWithChildren) {
       <UserProvider fallback={AnonymousLogin}>
         <RealmProvider
           schema={[Task]}
+          closeOnUnmount={false}
           sync={{
             onError: (_session, error) => {
               console.log(error);
