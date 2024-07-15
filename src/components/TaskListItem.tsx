@@ -1,12 +1,13 @@
 import { Pressable, StyleSheet, Text, TouchableOpacity } from "react-native";
-import React from "react";
+import React, { useEffect } from "react";
 import { FontAwesome } from "@expo/vector-icons";
 import { Link } from "expo-router";
 import { Task } from "@/models/Task";
 import { useRealm } from "@realm/react";
 import { useDraggingContext } from "./TaskDragArea";
 import Animated, {
-  useAnimatedStyle,
+  useAnimatedReaction,
+  useSharedValue,
   withTiming,
 } from "react-native-reanimated";
 
@@ -20,50 +21,59 @@ export const ItemHeight = 60;
 export default function TaskListItem({ task, index }: TaskListItemProps) {
   const realm = useRealm();
   const { setDraggingTask, dragY, draggingTaskId } = useDraggingContext();
+
+  const marginTop = useSharedValue(0);
+
   const isDragging = draggingTaskId
     ? draggingTaskId.toString() === task._id.toString()
     : false;
+
+  useAnimatedReaction(
+    () => dragY?.value,
+    (newDragY) => {
+      if (!newDragY) return (marginTop.value = 0);
+
+      const itemY = index * ItemHeight + 73;
+
+      //above the first item, will make a space (margin)
+      if (index === 0 && newDragY < itemY + ItemHeight) {
+        marginTop.value = withTiming(ItemHeight);
+      }
+      //if top of the current time
+      marginTop.value = withTiming(
+        newDragY >= itemY && newDragY < itemY + ItemHeight ? ItemHeight : 0,
+      );
+    },
+  );
+
+  useEffect(() => {
+    const itemY = index * ItemHeight + 73;
+    if (draggingTaskId && dragY) {
+      marginTop.value =
+        dragY?.value >= itemY && dragY?.value < itemY + ItemHeight
+          ? ItemHeight
+          : 0;
+    } else {
+      marginTop.value = 0;
+    }
+  }, [dragY, draggingTaskId, index, marginTop]);
+
   const deleteTask = () => {
     realm.write(() => {
       realm.delete(task);
     });
   };
 
-  const animatedStyle = useAnimatedStyle(() => {
-    //If not selected then, the margin top reset to 0, so there are not spaces
-    if (!dragY)
-      return {
-        marginTop: 0,
-      };
-
-    const itemY = index * ItemHeight + 72;
-
-    //above the first item, will make a space (margin)
-    if (index === 0 && dragY.value < itemY + ItemHeight) {
-      return {
-        marginTop: withTiming(ItemHeight),
-      };
-    }
-    //if top of the current time
-    return {
-      marginTop: withTiming(
-        dragY?.value > itemY && dragY.value < itemY + ItemHeight
-          ? ItemHeight
-          : 0,
-      ),
-    };
-  });
-
   if (isDragging) {
-    return <Animated.View style={animatedStyle} />;
+    return <Animated.View style={{ marginTop }} />;
   }
 
   return (
-    <Animated.View style={[styles.root, animatedStyle]}>
+    <Animated.View style={[styles.root, { marginTop }]}>
       <Link href={`/${task._id}`} asChild>
         <Pressable
           style={styles.container}
-          onLongPress={() => setDraggingTask(task._id, index * ItemHeight + 72)}
+          onLongPress={() => setDraggingTask(task._id, index * ItemHeight + 73)}
         >
           <Text style={styles.text}>
             {task.position}: {task.description}

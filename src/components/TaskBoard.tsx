@@ -20,7 +20,7 @@ export default function TaskBoard() {
     // Ensure newPosition is at least 1 and does not exceed the number of tasks
     const newPosition = Math.max(
       1,
-      Math.min(Math.ceil((y - 72) / ItemHeight), taskCount),
+      Math.min(Math.ceil((y - 73) / ItemHeight), taskCount),
     );
 
     realm.write(() => {
